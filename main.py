@@ -40,6 +40,8 @@ class Game:
             self.player.moving_up = True
         if event.key == pygame.K_DOWN:
             self.player.moving_down = True
+        if event.key == pygame.K_SPACE:
+            self.player.jump()
 
     def handle_keyup_events(self, event):
         if event.key == pygame.K_LEFT:
@@ -80,12 +82,21 @@ class Game:
             self.clock.tick(FPS)
             self.handle_events()
             self.update()
+            self.check_collisions()
             self.draw()
 
         pygame.quit()
         sys.exit()
 
+    def check_collisions(self):
+        platform_collisions = pygame.sprite.spritecollide(self.player, self.platforms, dokill=False)
+        if platform_collisions:
+            print("collision")
+            self.player.on_ground = True
 
+        else:
+            self.player.on_ground = False
+        
 
 # -----------------------------
 # Entry Point

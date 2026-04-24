@@ -16,7 +16,8 @@ class Player(pygame.sprite.Sprite):
         self.moving_right = False
         self.on_ground = False
 
-        self.y_vel = 1
+        self.y_vel = 0
+        self.jump_velocity = -10
 
 
     def update(self):
@@ -28,8 +29,14 @@ class Player(pygame.sprite.Sprite):
 
         if not self.on_ground:
             self.y_vel += 0.5
-            self.rect.y += self.y_vel
-            print("not on ground")
+        
+        if self.on_ground:
+            self.y_vel = 0
+        
+        
+        self.rect.y += self.y_vel
+            
+
 
     def handle_input(self):
         pass
@@ -39,4 +46,7 @@ class Player(pygame.sprite.Sprite):
         
     def draw(self, surface):
         pygame.draw.rect(surface, "blue", self.rect)
+
+    def jump(self):
+        self.y_vel = self.jump_velocity
 
