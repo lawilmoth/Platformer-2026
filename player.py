@@ -9,7 +9,7 @@ class Player(pygame.sprite.Sprite):
         self.y = y
         self.width = 16
         self.height = 16
-        self.speed = 2
+        self.speed = 5
         self.rect = pygame.rect.Rect(self.x, self.y, self.width, self.height)
 
         self.moving_left = False
@@ -18,7 +18,7 @@ class Player(pygame.sprite.Sprite):
 
         self.y_vel = 0
         self.jump_velocity = -10
-
+        self.can_double_jump = True
 
     def update(self):
         if self.moving_left:
@@ -27,12 +27,7 @@ class Player(pygame.sprite.Sprite):
         if self.moving_right:
             self.rect.x += self.speed
 
-        if not self.on_ground:
-            self.y_vel += 0.5
-        
-        if self.on_ground:
-            self.y_vel = 0
-        
+        self.y_vel += 0.5
         
         self.rect.y += self.y_vel
             
@@ -48,5 +43,12 @@ class Player(pygame.sprite.Sprite):
         pygame.draw.rect(surface, "blue", self.rect)
 
     def jump(self):
-        self.y_vel = self.jump_velocity
+        if self.on_ground:
+            self.y_vel = self.jump_velocity
+            self.on_ground = False
+
+        elif self.can_double_jump:
+            self.y_vel = self.jump_velocity
+            self.on_ground = False
+            self.can_double_jump = False
 

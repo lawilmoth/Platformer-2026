@@ -26,7 +26,7 @@ class Game:
 
 
         self.platforms = pygame.sprite.Group()
-        self.platforms.add(Platform(200, 300, 100, 100))
+        self.platforms.add(Platform(0, 300, 400, 100))
         self.platforms.add(Platform(400, 350, 200, 100))
 
         self.player = Player(0, 0)
@@ -79,6 +79,7 @@ class Game:
 
     def run(self):
         while self.running:
+            
             self.clock.tick(FPS)
             self.handle_events()
             self.update()
@@ -89,13 +90,16 @@ class Game:
         sys.exit()
 
     def check_collisions(self):
-        platform_collisions = pygame.sprite.spritecollide(self.player, self.platforms, dokill=False)
-        if platform_collisions:
-            print("collision")
-            self.player.on_ground = True
+        self.player.on_ground = False
 
-        else:
-            self.player.on_ground = False
+        platform_collisions = pygame.sprite.spritecollide(self.player, self.platforms, dokill=False)
+        
+        for platform in platform_collisions:
+            if self.player.y_vel > 0:
+                self.player.rect.bottom = platform.rect.top
+                self.player.y_vel = 0 
+                self.player.on_ground = True
+                self.player.can_double_jump = True
         
 
 # -----------------------------
