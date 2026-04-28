@@ -5,6 +5,10 @@ import pygame
 class Player(pygame.sprite.Sprite):
     def __init__(self, x, y):
         super().__init__()
+        self.checkpoint_x = x
+        self.checkpoint_y = y
+        self.lives = 3
+        
         self.x = x
         self.y = y
         self.width = 16
@@ -52,3 +56,9 @@ class Player(pygame.sprite.Sprite):
             self.on_ground = False
             self.can_double_jump = False
 
+
+    def respawn(self):
+        self.rect.x = self.checkpoint_x
+        self.rect.y = self.checkpoint_y
+        self.lives -= 1
+        print(self.lives)

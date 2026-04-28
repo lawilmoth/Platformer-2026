@@ -24,10 +24,13 @@ class Game:
         self.clock = pygame.time.Clock()
         self.running = True
 
+        self.level_offset = 0
 
         self.platforms = pygame.sprite.Group()
         self.platforms.add(Platform(0, 300, 400, 100))
         self.platforms.add(Platform(400, 350, 200, 100))
+        self.platforms.add(Platform(750, 250, 300, 100))
+        self.platforms.add(Platform(1250, 250, 300, 100))
 
         self.player = Player(0, 0)
 
@@ -68,6 +71,20 @@ class Game:
 
     def update(self):
         self.player.update()
+
+        if self.player.rect.left >= 700:
+            for platform in self.platforms:
+                platform.rect.x -= self.player.speed
+            
+            self.player.rect.x -= self.player.speed
+            self.level_offset += self.player.speed
+            print(self.level_offset)
+
+        if self.player.rect.top >= SCREEN_HEIGHT + self.player.height:
+            self.player.respawn()
+            for platform in self.platforms:
+                platform.rect.x -= self.level_offset 
+            self.level_offset = 0
 
     def draw(self):
         self.screen.fill((30, 30, 30))
