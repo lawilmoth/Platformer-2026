@@ -1,7 +1,6 @@
 import pygame
 import sys
 
-from player import Player
 from enemy import Enemy
 from platforms import Platform
 # -----------------------------
@@ -19,6 +18,9 @@ class Game:
     def __init__(self):
         pygame.init()
         self.screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+        
+        from player import Player
+        
         pygame.display.set_caption("Platformer")
 
         self.clock = pygame.time.Clock()

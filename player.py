@@ -1,7 +1,19 @@
 import pygame
-
+from sprite_sheet_parser import parse_sprite_sheet
 # Player Class
 # -----------------------------
+
+player_sheet = pygame.image.load("assets/DinoSprites - doux.png").convert_alpha()
+
+idle_frames = parse_sprite_sheet(
+    sheet=player_sheet, 
+    start_x=0,
+    start_y=0,
+    frame_count=4,
+    columns=24,
+    rows=1
+)
+
 class Player(pygame.sprite.Sprite):
     def __init__(self, x, y):
         super().__init__()
@@ -14,7 +26,6 @@ class Player(pygame.sprite.Sprite):
         self.width = 16
         self.height = 16
         self.speed = 5
-        self.rect = pygame.rect.Rect(self.x, self.y, self.width, self.height)
 
         self.moving_left = False
         self.moving_right = False
@@ -23,6 +34,15 @@ class Player(pygame.sprite.Sprite):
         self.y_vel = 0
         self.jump_velocity = -10
         self.can_double_jump = True
+
+        self.frames = idle_frames
+        self.frame_index = 0
+        self.animation_speed = 0.2
+        self.flip_x = False
+        self.image = self.frames[0]
+        self.rect = self.image.get_rect()
+        
+
 
     def update(self):
         if self.moving_left:
@@ -44,7 +64,8 @@ class Player(pygame.sprite.Sprite):
         pass
         
     def draw(self, surface):
-        pygame.draw.rect(surface, "blue", self.rect)
+        #pygame.draw.rect(surface, "blue", self.rect)
+        surface.blit(self.image, self.rect)
 
     def jump(self):
         if self.on_ground:
@@ -62,3 +83,6 @@ class Player(pygame.sprite.Sprite):
         self.rect.y = self.checkpoint_y
         self.lives -= 1
         print(self.lives)
+
+    def update_frames(self):
+        pass
