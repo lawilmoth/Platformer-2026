@@ -54,3 +54,13 @@ def parse_sprite_sheet(
 
     return frames
 
+
+def scale_frames(frames, scale):
+    scaled = []
+    for frame in frames:
+        width = frame.get_width() * scale
+        height = frame.get_height() * scale
+        scaled.append(
+            pygame.transform.scale(frame, (width, height))
+        )
+    return scaled

@@ -1,5 +1,5 @@
 import pygame
-from sprite_sheet_parser import parse_sprite_sheet
+from sprite_sheet_parser import parse_sprite_sheet, scale_frames
 # Player Class
 # -----------------------------
 
@@ -13,6 +13,8 @@ idle_frames = parse_sprite_sheet(
     columns=24,
     rows=1
 )
+
+idle_frames = scale_frames(idle_frames, 2)
 
 class Player(pygame.sprite.Sprite):
     def __init__(self, x, y):
@@ -41,6 +43,7 @@ class Player(pygame.sprite.Sprite):
         self.flip_x = False
         self.image = self.frames[0]
         self.rect = self.image.get_rect()
+        self.animation_count = 0
         
 
 
@@ -55,6 +58,7 @@ class Player(pygame.sprite.Sprite):
         
         self.rect.y += self.y_vel
             
+        self.update_frames()
 
 
     def handle_input(self):
@@ -85,4 +89,16 @@ class Player(pygame.sprite.Sprite):
         print(self.lives)
 
     def update_frames(self):
-        pass
+        self.animation_count += self.animation_speed
+
+        if self.animation_count >= 1:
+            self.frame_index = (self.frame_index + 1) % len(self.frames)
+            self.animation_count = 0
+
+        current_frame = self.frames[self.frame_index]
+
+        if self.moving_left:
+            current_frame = pygame.transform.flip(current_frame, True, False)
+
+        self.image = current_frame
+        
