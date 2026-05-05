@@ -69,7 +69,7 @@ class Player(pygame.sprite.Sprite):
         self.height = 16
         self.walk_speed = 5
         self.sprint_speed = 7
-        self.speed = 0
+
 
         self.moving_left = False
         self.moving_right = False
@@ -89,24 +89,29 @@ class Player(pygame.sprite.Sprite):
         self.is_walking = False
         self.is_sprinting = False
         self.is_hurt = False
+        self.x_vel = 0
         
 
 
     def update(self):
+        self.prev_rect = self.rect.copy()
         if self.is_sprinting:
-            self.speed = self.sprint_speed
+            self.x_vel = self.sprint_speed
         elif self.is_walking:
-            self.speed = self.walk_speed
+            self.x_vel = self.walk_speed
 
         if self.moving_left:
             self.is_walking = True
-            self.rect.x -= self.speed
+            self.x_vel = -self.x_vel
 
         elif self.moving_right:
             self.is_walking = True
-            self.rect.x += self.speed
+            self.x_vel = self.x_vel
+
+
 
         else: 
+            self.x_vel = 0
             self.is_walking  = False
             #self.is_sprinting = False
 
@@ -114,6 +119,7 @@ class Player(pygame.sprite.Sprite):
         self.y_vel += 0.5
         
         self.rect.y += self.y_vel
+        self.rect.x += self.x_vel
             
         self.update_frames()
 
@@ -143,7 +149,8 @@ class Player(pygame.sprite.Sprite):
         self.rect.x = self.checkpoint_x
         self.rect.y = self.checkpoint_y
         self.lives -= 1
-        print(self.lives)
+        self.y_vel = 0
+        self.can_double_jump = True
 
     def update_frames(self):
         self.animation_count += self.animation_speed

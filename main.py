@@ -34,7 +34,7 @@ class Game:
         self.platforms.add(Platform(750, 250, 300, 100))
         self.platforms.add(Platform(1250, 250, 300, 100))
         self.platforms.add(Platform(1750, 550, 300, 100))
-        self.platforms.add(Platform(2000, 20, 100, 800))
+        self.platforms.add(Platform(2000, 20, 100, 800, "blue"))
 
         self.player = Player(0, 0)
 
@@ -76,10 +76,10 @@ class Game:
 
         if self.player.rect.left >= 700:
             for platform in self.platforms:
-                platform.rect.x -= self.player.speed
+                platform.rect.x -= self.player.x_vel
             
-            self.player.rect.x -= self.player.speed
-            self.level_offset += self.player.speed
+            self.player.rect.x -= self.player.x_vel
+            self.level_offset += self.player.x_vel
             print(self.level_offset)
 
         if self.player.rect.top >= SCREEN_HEIGHT + self.player.height:
@@ -114,12 +114,30 @@ class Game:
         platform_collisions = pygame.sprite.spritecollide(self.player, self.platforms, dokill=False)
         
         for platform in platform_collisions:
-            if self.player.y_vel > 0:
-                self.player.rect.bottom = platform.rect.top
-                self.player.y_vel = 0 
-                self.player.on_ground = True
-                self.player.can_double_jump = True
-        
+            if self.player.y_vel >= 0:
+                if self.player.prev_rect.bottom <= platform.rect.top:
+                    self.player.rect.bottom = platform.rect.top
+                    self.player.y_vel = 0 
+                    self.player.on_ground = True
+                    self.player.can_double_jump = True
+            
+            if self.player.x_vel > 0:
+                if self.player.prev_rect.right <= platform.rect.left:
+                    self.player.rect.right = platform.rect.left
+                    self.player.x_vel = 0
+                    
+            if self.player.x_vel < 0:
+                if self.player.prev_rect.left >= platform.rect.right:
+                    self.player.rect.left = platform.rect.right
+                    self.player.x_vel = 0
+
+            if self.player.y_vel < 0:
+                if self.player.prev_rect.top <= platform.rect.bottom:
+                    self.player.rect.top = platform.rect.bottom
+                    self.player.y_vel = 0 
+                    
+            
+            
 
 # -----------------------------
 # Entry Point
