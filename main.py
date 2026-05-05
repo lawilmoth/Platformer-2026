@@ -2,7 +2,7 @@ import pygame
 import sys
 
 from enemy import Enemy
-from platforms import Platform
+from levels import Level
 # -----------------------------
 # Constants
 # -----------------------------
@@ -28,13 +28,8 @@ class Game:
 
         self.level_offset = 0
 
-        self.platforms = pygame.sprite.Group()
-        self.platforms.add(Platform(0, 300, 400, 100))
-        self.platforms.add(Platform(400, 350, 200, 100))
-        self.platforms.add(Platform(750, 250, 300, 100))
-        self.platforms.add(Platform(1250, 250, 300, 100))
-        self.platforms.add(Platform(1750, 550, 300, 100))
-        self.platforms.add(Platform(2000, 20, 100, 800, "blue"))
+        self.level = Level()
+        self.platforms = self.level.platforms
 
         self.player = Player(0, 0)
 
