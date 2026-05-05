@@ -121,7 +121,8 @@ class Game:
                     self.player.on_ground = True
                     self.player.can_double_jump = True
             
-            if self.player.x_vel > 0:
+            
+            if self.player.x_vel > 0: 
                 if self.player.prev_rect.right <= platform.rect.left:
                     self.player.rect.right = platform.rect.left
                     self.player.x_vel = 0
@@ -131,8 +132,9 @@ class Game:
                     self.player.rect.left = platform.rect.right
                     self.player.x_vel = 0
 
+            #Hitting head when jumping
             if self.player.y_vel < 0:
-                if self.player.prev_rect.top <= platform.rect.bottom:
+                if self.player.prev_rect.top >= platform.rect.bottom:
                     self.player.rect.top = platform.rect.bottom
                     self.player.y_vel = 0 
                     
