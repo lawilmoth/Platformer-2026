@@ -3,7 +3,7 @@ from sprite_sheet_parser import parse_sprite_sheet, scale_frames
 # Player Class
 # -----------------------------
 
-player_sheet = pygame.image.load("assets/DinoSprites - doux.png").convert_alpha()
+player_sheet = pygame.image.load("assets/DinoSprites - mort.png").convert_alpha()
 
 idle_frames = parse_sprite_sheet(
     sheet=player_sheet, 
@@ -14,7 +14,17 @@ idle_frames = parse_sprite_sheet(
     rows=1
 )
 
+walk_frames = parse_sprite_sheet(
+    sheet=player_sheet, 
+    start_x=60,
+    start_y=0,
+    frame_count=6,
+    columns=24,
+    rows=1
+)
+
 idle_frames = scale_frames(idle_frames, 2)
+walk_frames = scale_frames(walk_frames, 6)
 
 class Player(pygame.sprite.Sprite):
     def __init__(self, x, y):
@@ -37,7 +47,7 @@ class Player(pygame.sprite.Sprite):
         self.jump_velocity = -10
         self.can_double_jump = True
 
-        self.frames = idle_frames
+        self.frames = walk_frames
         self.frame_index = 0
         self.animation_speed = 0.2
         self.flip_x = False
