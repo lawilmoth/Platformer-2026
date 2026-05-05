@@ -6,8 +6,8 @@ from platforms import Platform
 # -----------------------------
 # Constants
 # -----------------------------
-SCREEN_WIDTH = 800
-SCREEN_HEIGHT = 480
+SCREEN_WIDTH = 1600
+SCREEN_HEIGHT = 900
 FPS = 60
 
 
@@ -33,6 +33,8 @@ class Game:
         self.platforms.add(Platform(400, 350, 200, 100))
         self.platforms.add(Platform(750, 250, 300, 100))
         self.platforms.add(Platform(1250, 250, 300, 100))
+        self.platforms.add(Platform(1750, 550, 300, 100))
+        self.platforms.add(Platform(2000, 20, 100, 800))
 
         self.player = Player(0, 0)
 
@@ -41,10 +43,9 @@ class Game:
             self.player.moving_left = True
         if event.key == pygame.K_RIGHT:
             self.player.moving_right = True
-        if event.key == pygame.K_UP:
-            self.player.moving_up = True
-        if event.key == pygame.K_DOWN:
-            self.player.moving_down = True
+        if event.key == pygame.K_LSHIFT:
+            self.player.is_sprinting = True
+            
         if event.key == pygame.K_SPACE:
             self.player.jump()
 
@@ -53,10 +54,9 @@ class Game:
             self.player.moving_left = False
         if event.key == pygame.K_RIGHT:
             self.player.moving_right = False
-        if event.key == pygame.K_UP:
-            self.player.moving_up = False
-        if event.key == pygame.K_DOWN:
-            self.player.moving_down = False
+        if event.key == pygame.K_LSHIFT:
+            self.player.is_sprinting = False
+
 
 
     def handle_events(self):
