@@ -193,3 +193,8 @@ class Player(pygame.sprite.Sprite):
 
         self.image = current_frame
         
+
+    def land(self):
+        self.y_vel = 0
+        self.on_ground = True
+        self.can_double_jump = True
