@@ -92,7 +92,7 @@ class Player(pygame.sprite.Sprite):
         self.is_hurt = False
         self.x_vel = 0
         
-
+        self.rect.x, self.rect.y = x, y
 
     def update(self):
         self.prev_rect = self.rect.copy()
@@ -151,7 +151,7 @@ class Player(pygame.sprite.Sprite):
         elif self.can_double_jump:
             self.y_vel = self.jump_velocity
             self.on_ground = False
-            #self.can_double_jump = False
+            self.can_double_jump = False
 
 
     def respawn(self):

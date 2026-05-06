@@ -32,7 +32,7 @@ class Game:
         self.level = Level()
         self.platforms = self.level.platforms
 
-        self.player = Player(0, 0, self)
+        self.player = Player(SCROLL_LIMIT + 1, 100, self)
 
     def handle_keydown_events(self, event):
         if event.key == pygame.K_LEFT:
@@ -76,6 +76,14 @@ class Game:
             
             self.player.rect.x -= self.player.x_vel
             self.level_offset += self.player.x_vel
+            print(self.level_offset)
+
+        if self.player.rect.right <= 0 + SCROLL_LIMIT:
+            for platform in self.platforms:
+                platform.rect.x -= self.player.x_vel
+            
+            self.player.rect.x -= self.player.x_vel
+            self.level_offset -= self.player.x_vel
             print(self.level_offset)
 
         if self.player.rect.top >= SCREEN_HEIGHT + self.player.height:
