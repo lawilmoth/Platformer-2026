@@ -57,7 +57,7 @@ hurt_frames = scale_frames(hurt_frames, 2)
 sprint_frames = scale_frames(sprint_frames, 2)
 
 class Player(pygame.sprite.Sprite):
-    def __init__(self, x, y):
+    def __init__(self, x, y, game):
         super().__init__()
         self.checkpoint_x = x
         self.checkpoint_y = y
@@ -65,12 +65,13 @@ class Player(pygame.sprite.Sprite):
         
         self.x = x
         self.y = y
+        self.game = game
         self.width = 16
         self.height = 16
         self.walk_speed = 5
         self.sprint_speed = 7
 
-
+        self.facing_left = False
         self.moving_left = False
         self.moving_right = False
         self.on_ground = False
@@ -95,6 +96,9 @@ class Player(pygame.sprite.Sprite):
 
     def update(self):
         self.prev_rect = self.rect.copy()
+        print(self.on_ground)
+
+        self.x_vel = 0
         if self.is_sprinting:
             self.x_vel = self.sprint_speed
         elif self.is_walking:
@@ -102,12 +106,13 @@ class Player(pygame.sprite.Sprite):
 
         if self.moving_left:
             self.is_walking = True
+            self.facing_left = True
             self.x_vel = -self.x_vel
 
         elif self.moving_right:
             self.is_walking = True
+            self.facing_left = False
             self.x_vel = self.x_vel
-
 
 
         else: 
@@ -115,11 +120,15 @@ class Player(pygame.sprite.Sprite):
             self.is_walking  = False
             #self.is_sprinting = False
 
+        self.rect.x += self.x_vel
+        
+        self.game.check_wall_collisions()
 
         self.y_vel += 0.5
-        
         self.rect.y += self.y_vel
-        self.rect.x += self.x_vel
+        self.game.check_vertical_collisions()
+        print(self.y_vel)
+        
             
         self.update_frames()
 
@@ -142,7 +151,7 @@ class Player(pygame.sprite.Sprite):
         elif self.can_double_jump:
             self.y_vel = self.jump_velocity
             self.on_ground = False
-            self.can_double_jump = False
+            #self.can_double_jump = False
 
 
     def respawn(self):
@@ -179,7 +188,7 @@ class Player(pygame.sprite.Sprite):
         self.frame_index %= len(self.frames)
         current_frame = self.frames[self.frame_index]
 
-        if self.moving_left:
+        if self.facing_left:
             current_frame = pygame.transform.flip(current_frame, True, False)
 
         self.image = current_frame

@@ -9,6 +9,7 @@ from levels import Level
 SCREEN_WIDTH = 1600
 SCREEN_HEIGHT = 900
 FPS = 60
+SCROLL_LIMIT = 500
 
 
 # -----------------------------
@@ -31,7 +32,7 @@ class Game:
         self.level = Level()
         self.platforms = self.level.platforms
 
-        self.player = Player(0, 0)
+        self.player = Player(0, 0, self)
 
     def handle_keydown_events(self, event):
         if event.key == pygame.K_LEFT:
@@ -69,7 +70,7 @@ class Game:
     def update(self):
         self.player.update()
 
-        if self.player.rect.left >= 700:
+        if self.player.rect.left >= SCREEN_WIDTH - SCROLL_LIMIT:
             for platform in self.platforms:
                 platform.rect.x -= self.player.x_vel
             
@@ -80,7 +81,8 @@ class Game:
         if self.player.rect.top >= SCREEN_HEIGHT + self.player.height:
             self.player.respawn()
             for platform in self.platforms:
-                platform.rect.x -= self.level_offset 
+                platform.rect.x = platform.start_x
+                platform.rect.y = platform.start_y
             self.level_offset = 0
 
     def draw(self):
@@ -95,46 +97,60 @@ class Game:
         while self.running:
             
             self.clock.tick(FPS)
-            self.handle_events()
             self.update()
-            self.check_collisions()
+            
+            self.handle_events()
+            #self.check_collisions()
             self.draw()
 
         pygame.quit()
         sys.exit()
 
     def check_collisions(self):
-        self.player.on_ground = False
+        pass
 
-        platform_collisions = pygame.sprite.spritecollide(self.player, self.platforms, dokill=False)
+
+    def check_wall_collisions(self):
         
-        for platform in platform_collisions:
-            if self.player.y_vel >= 0:
-                if self.player.prev_rect.bottom <= platform.rect.top:
-                    self.player.rect.bottom = platform.rect.top
-                    self.player.y_vel = 0 
-                    self.player.on_ground = True
-                    self.player.can_double_jump = True
-            
-            
-            if self.player.x_vel > 0: 
+        collisions = pygame.sprite.spritecollide(
+            self.player, self.platforms, False
+        )
+        
+        for platform in collisions:
+            if self.player.x_vel > 0:
                 if self.player.prev_rect.right <= platform.rect.left:
                     self.player.rect.right = platform.rect.left
                     self.player.x_vel = 0
-                    
-            if self.player.x_vel < 0:
+
+            elif self.player.x_vel < 0:
                 if self.player.prev_rect.left >= platform.rect.right:
                     self.player.rect.left = platform.rect.right
                     self.player.x_vel = 0
+  
 
-            #Hitting head when jumping
-            if self.player.y_vel < 0:
-                if self.player.prev_rect.top >= platform.rect.bottom:
+    def check_vertical_collisions(self):
+        #self.player.on_ground = False
+
+        collisions = pygame.sprite.spritecollide(
+            self.player, self.platforms, False
+        )
+
+
+        for platform in collisions:
+            # Landing
+            if self.player.y_vel >= 0:
+                if self.player.prev_rect.bottom >= platform.rect.top:
+                    self.player.rect.bottom = platform.rect.top
+                    self.player.y_vel = 0
+                    self.player.on_ground = True
+                    self.player.can_double_jump = True
+
+            # Hitting ceiling
+            elif self.player.y_vel < 0:
+                if self.player.prev_rect.top <= platform.rect.bottom:
                     self.player.rect.top = platform.rect.bottom
-                    self.player.y_vel = 0 
-                    
-            
-            
+                    self.player.y_vel = 0
+
 
 # -----------------------------
 # Entry Point
