@@ -96,8 +96,6 @@ class Player(pygame.sprite.Sprite):
 
     def update(self):
         self.prev_rect = self.rect.copy()
-        print(self.on_ground)
-
         self.x_vel = 0
         if self.is_sprinting:
             self.x_vel = self.sprint_speed
@@ -127,7 +125,6 @@ class Player(pygame.sprite.Sprite):
         self.y_vel += 0.5
         self.rect.y += self.y_vel
         self.game.check_vertical_collisions()
-        print(self.y_vel)
         
             
         self.update_frames()

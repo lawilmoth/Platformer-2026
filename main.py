@@ -61,15 +61,17 @@ class Game:
     def update(self):
         self.player.update()
         self.handle_scroll()
-        self.check_player_death()        
-
-
+        self.check_player_death()   
+        self.level.enemies.update()     
 
 
     def draw(self):
         self.screen.fill((30, 30, 30))
         for platform in self.platforms:
             platform.draw(self.screen)
+        
+        for enemy in self.level.enemies:
+            enemy.draw(self.screen)
 
         self.player.draw(self.screen)
         pygame.display.flip()
@@ -133,11 +135,15 @@ class Game:
         if self.player.rect.left >= SCREEN_WIDTH - SCROLL_LIMIT:
             for platform in self.platforms:
                 platform.rect.x -= self.player.x_vel
+            for enemy in self.level.enemies:
+                enemy.rect.x -= self.player.x_vel
             self.player.rect.x -= self.player.x_vel            
             
         if self.player.rect.right <= 0 + SCROLL_LIMIT:
             for platform in self.platforms:
                 platform.rect.x -= self.player.x_vel
+            for enemy in self.level.enemies:
+                enemy.rect.x -= self.player.x_vel
             
             self.player.rect.x -= self.player.x_vel
             
