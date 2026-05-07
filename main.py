@@ -62,7 +62,7 @@ class Game:
         self.player.update()
         self.handle_scroll()
         self.check_player_death()   
-        self.level.enemies.update()     
+        self.level.enemies.update(self.player)     
 
 
     def draw(self):
@@ -83,14 +83,22 @@ class Game:
             self.update()
             
             self.handle_events()
-            #self.check_collisions()
+            self.check_collisions()
             self.draw()
 
         pygame.quit()
         sys.exit()
 
     def check_collisions(self):
-        pass
+        collisions = pygame.sprite.spritecollide(
+            self.player, self.level.enemies, False
+        )
+        if collisions:
+            if self.player.y_vel > 0:
+                for enemy in collisions:
+                    enemy.kill()
+            
+                self.player.y_vel = -5
 
 
     def check_wall_collisions(self):
@@ -154,6 +162,8 @@ class Game:
 
     def restart_level(self):
         self.player.respawn()
+        for enemy in self.level.enemies:
+            enemy.respawn()
         for platform in self.platforms:
             platform.rect.x = platform.start_x
             platform.rect.y = platform.start_y
