@@ -3,7 +3,7 @@ from sprite_sheet_parser import parse_sprite_sheet, scale_frames
 # Player Class
 # -----------------------------
 
-player_sheet = pygame.image.load("assets/DinoSprites - mort.png").convert_alpha()
+player_sheet = pygame.image.load("assets/DinoSprites - vita.png").convert_alpha()
 
 idle_frames = parse_sprite_sheet(
     sheet=player_sheet, 
@@ -11,7 +11,10 @@ idle_frames = parse_sprite_sheet(
     start_y=0,
     frame_count=4,
     columns=24,
-    rows=1
+    rows=1,
+    trim_bottom= 2,
+    trim_right=4,
+    trim_left=4
 )
 
 walk_frames = parse_sprite_sheet(
@@ -20,7 +23,10 @@ walk_frames = parse_sprite_sheet(
     start_y=0,
     frame_count=6,
     columns=24,
-    rows=1
+    rows=1,
+    trim_bottom= 2,
+    trim_right=4,
+    trim_left=4
 )
 
 jump_frames = parse_sprite_sheet(
@@ -29,7 +35,10 @@ jump_frames = parse_sprite_sheet(
     start_y=0,
     frame_count=1,
     columns=24,
-    rows=1
+    rows=1,
+    trim_bottom= 2,
+    trim_right=4,
+    trim_left=2
 )
 
 hurt_frames = parse_sprite_sheet(
@@ -38,7 +47,10 @@ hurt_frames = parse_sprite_sheet(
     start_y=0,
     frame_count=3,
     columns=24,
-    rows=1
+    rows=1,
+    trim_bottom= 2,    
+    trim_right=4,
+    trim_left=4 
 )
 
 sprint_frames = parse_sprite_sheet(
@@ -47,7 +59,8 @@ sprint_frames = parse_sprite_sheet(
     start_y=0,
     frame_count=6,
     columns=24,
-    rows=1
+    rows=1,
+    trim_bottom= 2
 )
 
 idle_frames = scale_frames(idle_frames, 2)
@@ -189,6 +202,7 @@ class Player(pygame.sprite.Sprite):
             current_frame = pygame.transform.flip(current_frame, True, False)
 
         self.image = current_frame
+        self.mask = pygame.mask.from_surface(self.image)
         
 
     def land(self):

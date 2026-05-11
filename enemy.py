@@ -15,12 +15,14 @@ class Enemy(pygame.sprite.Sprite):
         self.color = color
         self.platforms = platforms
         self.rect = pygame.rect.Rect(self.x, self.y, self.width, self.height)
+        
         self.rect.x, self.rect.y = x, y
         self.y_vel = 0
         self.on_ground = False
         self.x_vel = 0
         self.speed = 2
         self.awareness_distance = 100
+        self.mask = self.create_rect_mask()
 
     def update(self, player):
         self.on_ground = False
@@ -59,3 +61,7 @@ class Enemy(pygame.sprite.Sprite):
         self.rect.x = self.start_x
         self.rect.y = self.start_y
 
+    
+    def create_rect_mask(rect):
+        mask = pygame.Mask((rect.width, rect.height), fill=True)
+        return mask

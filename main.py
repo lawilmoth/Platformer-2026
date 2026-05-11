@@ -26,6 +26,8 @@ class Game:
         self.level = Level()
         self.platforms = self.level.platforms
         self.player = Player(SCROLL_LIMIT + 1, 100, self)
+        self.enemies = self.level.enemies
+        
 
     def handle_keydown_events(self, event):
         if event.key == pygame.K_LEFT:
