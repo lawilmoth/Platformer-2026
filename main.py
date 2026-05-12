@@ -25,7 +25,9 @@ class Game:
         self.running = True
         self.level = Level()
         self.platforms = self.level.platforms
-        self.player = Player(SCROLL_LIMIT + 1, 100, self)
+        self.player = Player(self.level.spawn_point[0], self.level.spawn_point[1], self)
+        self.player.checkpoint_x = self.level.spawn_point[0]
+        self.player.checkpoint_y = self.level.spawn_point[1]
         self.enemies = self.level.enemies
         
 
@@ -71,6 +73,9 @@ class Game:
         self.screen.fill((30, 30, 30))
         for platform in self.platforms:
             platform.draw(self.screen)
+
+        for checkpoint in self.level.checkpoints:
+            checkpoint.draw(self.screen)
         
         for enemy in self.level.enemies:
             enemy.draw(self.screen)
@@ -96,11 +101,14 @@ class Game:
             self.player, self.level.enemies, False
         )
         if collisions:
-            if self.player.y_vel > 0:
+            #Is the player falling?
+            if self.player.y_vel > 0: 
                 for enemy in collisions:
                     enemy.kill()
             
                 self.player.y_vel = -5
+            else:
+                self.restart_level()
 
 
     def check_wall_collisions(self):
@@ -145,6 +153,8 @@ class Game:
         if self.player.rect.left >= SCREEN_WIDTH - SCROLL_LIMIT:
             for platform in self.platforms:
                 platform.rect.x -= self.player.x_vel
+            for checkpoint in self.level.checkpoints:
+                checkpoint.rect.x -= self.player.x_vel
             for enemy in self.level.enemies:
                 enemy.rect.x -= self.player.x_vel
             self.player.rect.x -= self.player.x_vel            
@@ -152,6 +162,8 @@ class Game:
         if self.player.rect.right <= 0 + SCROLL_LIMIT:
             for platform in self.platforms:
                 platform.rect.x -= self.player.x_vel
+            for checkpoint in self.level.checkpoints:
+                checkpoint.rect.x -= self.player.x_vel
             for enemy in self.level.enemies:
                 enemy.rect.x -= self.player.x_vel
             
@@ -164,11 +176,7 @@ class Game:
 
     def restart_level(self):
         self.player.respawn()
-        for enemy in self.level.enemies:
-            enemy.respawn()
-        for platform in self.platforms:
-            platform.rect.x = platform.start_x
-            platform.rect.y = platform.start_y
+        self.level.load_level_1()
 # -----------------------------
 # Entry Point
 # -----------------------------
